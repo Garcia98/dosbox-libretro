@@ -66,7 +66,7 @@
 #define HAVE_SYS_TYPES_H 1
 #define HAVE_UNISTD_H 1
 
-#if !defined(__WIN32__) && !defined(__POWERPC__)
+#if !defined(__WIN32__) && !defined(__POWERPC__) && !defined(VITA)
 # define HAVE_PWD_H 1
 #endif
 
@@ -117,10 +117,12 @@
 /* #undef inline */
 #endif
 
+#ifndef INLINE
 #if C_ATTRIBUTE_ALWAYS_INLINE
 #define INLINE inline __attribute__((always_inline))
 #else
 #define INLINE inline
+#endif
 #endif
 
 #if C_ATTRIBUTE_FASTCALL

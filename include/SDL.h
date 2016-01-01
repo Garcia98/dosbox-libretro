@@ -6,6 +6,12 @@
 #include <sys/time.h>
 #include <unistd.h>
 
+#include <retro_miscellaneous.h>
+
+#ifdef VITA
+#include <psp2/kernel/threadmgr.h>
+#endif
+
 typedef uint8_t Uint8;
 typedef uint16_t Uint16;
 typedef uint32_t Uint32;
@@ -23,9 +29,9 @@ typedef int SDL_mutex;
 #define SDL_mutexP(...)
 
 // TIMER
-inline void SDL_Delay(unsigned x)
+inline void SDL_Delay(unsigned ms)
 {
-    usleep(x * 1000);
+   rarch_sleep(ms);
 }
 
 inline unsigned SDL_GetTicks()
