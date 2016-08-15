@@ -183,29 +183,29 @@ bool CDROM_Interface_Image::GetUPC(unsigned char& attr, char* upc)
 
 bool CDROM_Interface_Image::GetAudioTracks(int& stTrack, int& end, TMSF& leadOut)
 {
-	stTrack = 1;
+	/* stTrack = 1;
 	end = (int)(tracks.size() - 1);
-	FRAMES_TO_MSF(tracks[tracks.size() - 1].start + 150, &leadOut.min, &leadOut.sec, &leadOut.fr);
+	FRAMES_TO_MSF(tracks[tracks.size() - 1].start + 150, &leadOut.min, &leadOut.sec, &leadOut.fr); */
 	return true;
 }
 
 bool CDROM_Interface_Image::GetAudioTrackInfo(int track, TMSF& start, unsigned char& attr)
 {
-	if (track < 1 || track > (int)tracks.size()) return false;
+	/* if (track < 1 || track > (int)tracks.size()) return false;
 	FRAMES_TO_MSF(tracks[track - 1].start + 150, &start.min, &start.sec, &start.fr);
-	attr = tracks[track - 1].attr;
+	attr = tracks[track - 1].attr; */
 	return true;
 }
 
 bool CDROM_Interface_Image::GetAudioSub(unsigned char& attr, unsigned char& track, unsigned char& index, TMSF& relPos, TMSF& absPos)
 {
-	int cur_track = GetTrack(player.currFrame);
+	/* int cur_track = GetTrack(player.currFrame);
 	if (cur_track < 1) return false;
 	track = (unsigned char)cur_track;
 	attr = tracks[track - 1].attr;
 	index = 1;
 	FRAMES_TO_MSF(player.currFrame + 150, &absPos.min, &absPos.sec, &absPos.fr);
-	FRAMES_TO_MSF(player.currFrame - tracks[track - 1].start + 150, &relPos.min, &relPos.sec, &relPos.fr);
+	FRAMES_TO_MSF(player.currFrame - tracks[track - 1].start + 150, &relPos.min, &relPos.sec, &relPos.fr); */
 	return true;
 }
 
@@ -416,8 +416,9 @@ bool CDROM_Interface_Image::CanReadPVD(TrackFile *file, int sectorSize, bool mod
 	if (sectorSize == RAW_SECTOR_SIZE && !mode2) seek += 16;
 	if (mode2) seek += 24;
 	file->read(pvd, seek, COOKED_SECTOR_SIZE);
-	// pvd[0] = descriptor type, pvd[1..5] = standard identifier, pvd[6] = iso version
-	return (pvd[0] == 1 && !strncmp((char*)(&pvd[1]), "CD001", 5) && pvd[6] == 1);
+	// pvd[0] = descriptor type, pvd[1..5] = standard identifier, pvd[6] = iso version (+8 for High Sierra)
+	return ((pvd[0] == 1 && !strncmp((char*)(&pvd[1]), "CD001", 5) && pvd[6] == 1) ||
+			(pvd[8] == 1 && !strncmp((char*)(&pvd[9]), "CDROM", 5) && pvd[14] == 1));
 }
 
 #if defined(WIN32) || (defined(__LIBRETRO__) && defined(GEKKO)) // __LIBRETRO__: No dirname on wii
@@ -449,7 +450,7 @@ bool CDROM_Interface_Image::LoadCueSheet(char *cuefile)
 	bool canAddTrack = false;
 	char tmp[MAX_FILENAME_LENGTH];	// dirname can change its argument
 	safe_strncpy(tmp, cuefile, MAX_FILENAME_LENGTH);
-	string pathname(dirname(tmp));
+	//string pathname(dirname(tmp));
 	ifstream in;
 	in.open(cuefile, ios::in);
 	if (in.fail()) return false;
@@ -518,7 +519,7 @@ bool CDROM_Interface_Image::LoadCueSheet(char *cuefile)
 			
 			string filename;
 			GetCueString(filename, line);
-			GetRealFileName(filename, pathname);
+			//GetRealFileName(filename, pathname);
 			string type;
 			GetCueKeyword(type, line);
 
@@ -696,13 +697,13 @@ bool CDROM_Interface_Image::GetCueKeyword(string &keyword, istream &in)
 
 bool CDROM_Interface_Image::GetCueFrame(int &frames, istream &in)
 {
-	string msf;
+/* 	string msf;
 	in >> msf;
 	int min, sec, fr;
 	bool success = sscanf(msf.c_str(), "%d:%d:%d", &min, &sec, &fr) == 3;
-	frames = MSF_TO_FRAMES(min, sec, fr);
+	frames = MSF_TO_FRAMES(min, sec, fr); */
 	
-	return success;
+	return true;
 }
 
 bool CDROM_Interface_Image::GetCueString(string &str, istream &in)

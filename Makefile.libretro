@@ -122,13 +122,29 @@ else ifeq ($(platform), wii)
    AR = $(DEVKITPPC)/bin/powerpc-eabi-ar$(EXE_EXT)
    COMMONFLAGS += -DGEKKO -mrvl -mcpu=750 -meabi -mhard-float -D__POWERPC__ -D__ppc__ -DWORDS_BIGENDIAN=1
 	STATIC_LINKING = 1
+else ifeq ($(platform), ctr)
+   TARGET := libretro_ctr.a
+   CC = $(DEVKITARM)/bin/arm-none-eabi-gcc$(EXE_EXT)
+   CXX = $(DEVKITARM)/bin/arm-none-eabi-g++$(EXE_EXT)
+   AR = $(DEVKITARM)/bin/arm-none-eabi-ar$(EXE_EXT)
+   ENDIANNESS_DEFINES := -DLSB_FIRST
+   COMMONFLAGS += -DARM11 -D_3DS -Os -s
+   COMMONFLAGS += -DHAVE_MKDIR
+   COMMONFLAGS += -march=armv6k -mtune=mpcore -mfloat-abi=hard
+   COMMONFLAGS += -mword-relocations
+   COMMONFLAGS += -fomit-frame-pointer -fstrict-aliasing -ffast-math
+   COMMONFLAGS += -DDISABLE_EXCEPTIONS
+   STATIC_LINKING = 1
+   IS_X86 := 0
+   NEED_BPP := 16
 else
    CXXFLAGS += -mno-ms-bitfields
    TARGET := $(TARGET_NAME)_libretro.dll
    LDFLAGS += -shared -static-libgcc -static-libstdc++ -Wl,--version-script=libretro/link.T -lwinmm
 endif
 
-ifeq ($(DEBUG), 1)
+ifeq ($(platform), ctr)
+else ifeq ($(DEBUG), 1)
 COMMONFLAGS += -O0 -g
 else
 COMMONFLAGS += -O3 -DNDEBUG -DGIT_VERSION=\"$(GIT_VERSION)\" 

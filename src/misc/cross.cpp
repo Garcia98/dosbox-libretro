@@ -119,8 +119,8 @@ void Cross::ResolveHomedir(std::string & temp_line) {
 		std::string::size_type namelen = temp_line.find(CROSS_FILESPLIT);
 		if(namelen == std::string::npos) namelen = temp_line.size();
 		std::string username = temp_line.substr(1,namelen - 1);
-		struct passwd* pass = getpwnam(username.c_str());
-		if(pass) temp_line.replace(0,namelen,pass->pw_dir); //namelen -1 +1(for the ~)
+//		struct passwd* pass = getpwnam(username.c_str());
+//		if(pass) temp_line.replace(0,namelen,pass->pw_dir); //namelen -1 +1(for the ~)
 #endif // USERNAME lookup code
 	}
 }

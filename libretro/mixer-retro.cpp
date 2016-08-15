@@ -607,7 +607,7 @@ public:
          if (!db)
             val/=100;
          else
-            val=powf(10.0f,(float)val/20.0f);
+//            val=powf(10.0f,(float)val/20.0f);
          if (val<0)
             val=1.0f;
          if (!w)
